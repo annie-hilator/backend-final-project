@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from enum import Enum
 
 class CategoryBase(BaseModel):
     name: str
@@ -31,6 +32,7 @@ class VacancyBase(BaseModel):
     is_deleted: bool = False
     category_id: int
     position_id: int
+    created_by_user_id: int | None = None
 
 
 class VacancyCreate(VacancyBase):
@@ -44,6 +46,7 @@ class VacancyUpdate(BaseModel):
     is_deleted: bool | None = None
     category_id: int | None = None
     position_id: int | None = None
+    created_by_user_id: int | None = None
 
 
 class VacancyResponse(VacancyBase):
@@ -68,10 +71,22 @@ class CandidateResponse(CandidateBase):
     class Config:
         from_attributes = True
 
+class ResumeStatusSchema(str, Enum):
+    new = "new"
+    interview = "interview"
+    rejected = "rejected"
+    accepted = "accepted"
+
+
+class ApplicationStatusSchema(str, Enum):
+    new = "new"
+    interview = "interview"
+    rejected = "rejected"
+    accepted = "accepted"
 
 class ResumeBase(BaseModel):
     experience: str
-    status: str = "new"
+    status: ResumeStatusSchema = ResumeStatusSchema.new
     is_deleted: bool = False
     candidate_id: int
     category_id: int
@@ -83,7 +98,8 @@ class ResumeCreate(ResumeBase):
 
 class ResumeUpdate(BaseModel):
     experience: str | None = None
-    status: str | None = None
+    status: ResumeStatusSchema | None = None
+    created_by_user_id: int | None = None
     is_deleted: bool | None = None
     candidate_id: int | None = None
     category_id: int | None = None
@@ -117,7 +133,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 class ApplicationBase(BaseModel):
-    status: str = "new"
+    status: ApplicationStatusSchema = ApplicationStatusSchema.new
     is_deleted: bool = False
     vacancy_id: int
     resume_id: int
@@ -128,7 +144,7 @@ class ApplicationCreate(ApplicationBase):
 
 
 class ApplicationUpdate(BaseModel):
-    status: str | None = None
+    status: ApplicationStatusSchema | None = None
     is_deleted: bool | None = None
     vacancy_id: int | None = None
     resume_id: int | None = None
@@ -157,3 +173,4 @@ class ChangePasswordRequest(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     user_id: int
+

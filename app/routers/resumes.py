@@ -43,7 +43,10 @@ def create_resume(resume: ResumeCreate, db: Session = Depends(get_db), current_u
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    db_resume = Resume(**resume.model_dump())
+    resume_data = resume.model_dump()
+    resume_data["created_by_user_id"] = current_user.id
+
+    db_resume = Resume(**resume_data)
 
     db.add(db_resume)
     db.commit()

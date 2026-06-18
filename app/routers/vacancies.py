@@ -56,7 +56,10 @@ def create_vacancy(vacancy: VacancyCreate, db: Session = Depends(get_db), curren
     if not position:
         raise HTTPException(status_code=404, detail="Position not found")
 
-    db_vacancy = Vacancy(**vacancy.model_dump())
+    vacancy_data = vacancy.model_dump()
+    vacancy_data["created_by_user_id"] = current_user.id
+
+    db_vacancy = Vacancy(**vacancy_data)
     db.add(db_vacancy)
     db.commit()
     db.refresh(db_vacancy)
