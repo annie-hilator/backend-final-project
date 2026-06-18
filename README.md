@@ -124,3 +124,18 @@ pytest
 * `PATCH /applications/{application_id}` - изменить статус отклика;
 * `DELETE /applications/{application_id}` - отметка отклика как удалённого;
 * `GET /applications/statistics/vacancy/{vacancy_id}` - статистика по кандидатам на вакансию.
+
+## Тесты
+
+Запуск тестов:
+
+```
+pytest
+```
+Запуск тестов с покрытием:
+
+```
+pytest --cov=app --cov-report=term-missing
+```
+
+Текущее покрытие тестами: **94%**.
