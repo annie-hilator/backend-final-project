@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16
+    container_name: hr_service_db
+    environment:
+      POSTGRES_DB: hr_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: hr_service_app
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:12345@db:5432/hr_service
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
